@@ -12,7 +12,7 @@ class Serie(Base):
     nota = Column(Float)
 
     #relações
-    episodios = relationship("Episodio", back_populates="serie")
+    episodios = relationship("Episodio", back_populates="series")
 
     def __init__ (self, titulo, data, genero, nota ):
         self.titulo = titulo
@@ -33,13 +33,10 @@ class Episodio(Base):
     serie_id = Column(Integer, ForeignKey("series.id"))
 
     #relacionamento
-    serie = relationship("Serie", back_populates="episodios")
+    series = relationship("Serie", back_populates="episodios")
 
     
-    def __init__ (self, nome, duracao, avaliacao ):
-        self.nome = nome
-        self.duracao = duracao
-        self.avaliacao = avaliacao
+    
 
 
     
@@ -55,3 +52,48 @@ Base.metadata.create_all(engine)
 Session= sessionmaker (bind= engine)
 
 
+def cadastrar_serie():
+    with Session() as session:
+        try:
+            titulo_serie = input("Digite o nome da serie: ").capitalize()
+            data_serie = input("Digite a data da serie: ")
+            genero_serie = input("Digite o genero da serie: ").capitalize()
+            nota_serie = float(input("Digite a nota da serie: "))
+
+
+            serie1 = Serie(titulo=titulo_serie, data=data_serie, genero=genero_serie, nota=nota_serie)
+            session.add(serie1)
+            session.commit()
+            print(f"Serie {titulo_serie} cadastrado com sucesso!")
+        except Exception as erro:
+            session.rollback()
+            print(f"Ocorreu um erro ao cadastrar a serie {erro}")
+
+
+def cadastrar_ep():
+    with Session() as session:
+        try:
+            nome_serie = input("Digite o nome da serie para cadastrar os episodios:  ").capitalize()
+            serie = session.query(Serie).filter_by(titulo = nome_serie ).first()
+
+            if serie == None:
+                print(f"Nenhuma serie encontrada com esse nome: {nome_serie} ")
+                return
+            else:
+                nome_ep = input("Digite o nome do episodio: ").capitalize()
+                duracao_ep = input(f" Digite a duração do ep  {nome_ep}: ")
+                avaliacao_ep = float(input(f" Digite a avaliação do ep {nome_ep}: "))
+
+
+                ep = Episodio(nome = nome_ep, duracao= duracao_ep, avaliacao=avaliacao_ep,  series = serie)
+                #ep.series.append(ep)
+
+                session.add(ep)
+                session.commit()
+                print(f"episodio {nome_ep} adicionado com sucesso")
+
+        except Exception as erro:
+            session.rollback()
+            print(f"Ocorreu um erro ao cadastrar a serie {erro}")
+
+cadastrar_ep()
