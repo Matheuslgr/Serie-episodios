@@ -96,4 +96,17 @@ def cadastrar_ep():
             session.rollback()
             print(f"Ocorreu um erro ao cadastrar a serie {erro}")
 
-cadastrar_ep()
+def listar_series():
+    with Session() as session:
+        try:
+            busca = session.query(Serie).all()
+            for b in busca:
+                print(f"\n --- Serie {b.titulo} ---")
+                for episodio in b.episodios:
+                    print(episodio.nome)
+        except Exception as erro:
+            session.rollback()
+            print(f"Ocorreu um erro ao listar serie {erro}")
+
+
+    
