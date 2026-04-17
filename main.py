@@ -69,7 +69,6 @@ def cadastrar_serie():
             session.rollback()
             print(f"Ocorreu um erro ao cadastrar a serie {erro}")
 
-
 def cadastrar_ep():
     with Session() as session:
         try:
@@ -123,7 +122,6 @@ def deletar_episodio():
             session.rollback()
             print(f"Ocorreu um erro ao listar serie {erro}")
 
-
 def deletar_serie():
     with Session() as session:
         try:
@@ -137,6 +135,67 @@ def deletar_serie():
             session.rollback()
             print(f"Ocorreu um erro ao remover a serie {erro}")
 
+def atualizar_serie():
+    with Session() as session:
+        try:
+             nome_busca = input("Digite o nome da Série que deseja atualizar: ").capitalize()
+             atualizar_serie = session.query(Serie).filter_by(titulo = nome_busca).first()
+             if atualizar_serie:
+                 
+                 nome_serie = input(f"Digite o novo titulo para {nome_busca}: ").capitalize()
+                 atualizar_serie.titulo = nome_serie
+
+
+                 data = input(f"Digite a nova data para {nome_serie}: ").capitalize()
+                 atualizar_serie.data = data
+
+
+                 genero = input(f"Digite o novo genero para {nome_serie}: ").capitalize()
+                 atualizar_serie.genero = genero
+
+
+                 nota = input(f"Digite a nova nota para {nome_serie}: ").capitalize()
+                 atualizar_serie.nota = nota
+                 session.commit()
+                 print("Dados atulizado com sucesso!")
+             else:
+                 print("Série não encontrada")
+        except Exception as erro:
+            session.rollback()
+            print(f"Ocorreu um erro ao atulizzar a serie {erro}")
+
+def atulizar_episodio():
+    with Session() as session:
+        try:
+            nome_busca = input("Digite o nome do episodio que deseja atualizar: ").capitalize()
+            atualizar_episodio = session.query(Episodio).filter_by(nome = nome_busca).first()
+
+            if atualizar_episodio:
+
+                nome_episodio = input(f"Digite o novo titulo para o episodio {nome_busca}: ").capitalize()
+                atualizar_episodio.nome = nome_episodio
+
+                duracao = input(f"Digite a nova duração para o episodio {nome_episodio}: ").capitalize()
+                atualizar_episodio.duracao = duracao
+
+                avaliacao = input(f"Digite a nova avaliação para o episodio {nome_episodio}: ").capitalize()
+                atualizar_episodio.avaliacao = avaliacao
+                
+                session.commit()
+                print("dados atulizados com sucesso!")
+            else:
+                print("episodio não encontrado")
+        except Exception  as erro:
+            session.rollback()
+            print(f"Ocorreu um erro ao atulizar o episódio {erro}")
+
+atulizar_episodio()
+
+
+
+    
+
+ 
 
         
 
