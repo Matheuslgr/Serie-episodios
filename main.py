@@ -123,7 +123,22 @@ def deletar_episodio():
             session.rollback()
             print(f"Ocorreu um erro ao listar serie {erro}")
 
-deletar_episodio()
+
+def deletar_serie():
+    with Session() as session:
+        try:
+            nome_busca = input("Digite o nome da Série que deseja remover: ").capitalize()
+            deletar_serie = session.query(Serie).filter_by(titulo = nome_busca).first()
+            if deletar_serie:
+                session.delete(deletar_serie)
+                session.commit()
+                print(f"Série {nome_busca} deletado com sucesso")    
+        except Exception as erro:
+            session.rollback()
+            print(f"Ocorreu um erro ao remover a serie {erro}")
+
+
+        
 
 
 
